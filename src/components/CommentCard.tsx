@@ -170,13 +170,13 @@ export default function CommentCard({ data, id }: CommentCardProps) {
                                         <span className="text-xs text-zinc-500 dark:text-zinc-300 uppercase">{new Date(value.createdAt).toLocaleString()}</span>
                                     </div>
                                     <p className="text-sm text-zinc-700 dark:text-zinc-200 loading-relaxed text-left">{value.message}</p>
-                                    <div className={`flex ${value.user.name === user.name ? 'justify-between' : 'justify-end'} items-end`}>
-                                        {(value.user.name === user.name) && <button className="py-0 px-0 hover:bg-zinc-200/50 dark:hover:bg-zinc-800" onClick={() => handleDelete(value.id)}>
-                                            <p className="text-sm text-red-500 dark:text-red-500">Delete</p>
-                                        </button>}
+                                    <div className={`flex ${value?.user?.name === user?.name ? 'justify-between' : 'justify-end'} items-center`}>
+                                        {(value?.user?.name === user?.name) && <div className="cursor-pointer" onClick={() => handleDelete(value.id)}>
+                                            <p className="text-sm text-red-500 dark:text-red-500 hover:text-red-700 ">Delete</p>
+                                        </div>}
                                         <button className="py-0 px-0" onClick={() => handleLike(value.id, value.likedByUser)}>
                                             <div className="flex gap-2 items-center">
-                                                <ThumbsUp className={`text-yellow-600 ${value.likedByUser ? "fill-yellow-500" : ""}`} size={20} />
+                                                <ThumbsUp className={`text-yellow-600 ${value.likedByUser ? "fill-yellow-500 hover:fill-none" : "hover:fill-yellow-500"}`} size={20} />
                                                 <p className="text-sm text-zinc-600 dark:text-zinc-200 loading-relaxed text-left">{value.likesCount}</p>
                                             </div>
                                         </button>

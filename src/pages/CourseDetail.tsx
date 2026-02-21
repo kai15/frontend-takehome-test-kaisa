@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import courseData from '@/data/data.json';
@@ -9,6 +10,10 @@ export default function CourseDetail() {
     const data = courseData.courses.find(v => v.id === id);
 
     if (!data) return <EmptyData description="Course not found." />
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    }, [])
 
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 pb-20 -mt-20">
