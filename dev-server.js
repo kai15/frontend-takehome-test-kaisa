@@ -13,6 +13,7 @@ app.use(express.json());
 
 app.route('/api/users')
   .get(getUsers)
+  .post(getUsers)
   .patch(getUsers);
 app.get('/api/courses', getCourses);
 app.route('/api/comments')
