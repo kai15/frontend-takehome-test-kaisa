@@ -43,11 +43,11 @@ export default async function handler(req, res) {
 
     if (req.method === 'PATCH') {
         const { id, userId } = req.body;
-    
+
         if (!id || !userId) {
             return res.status(400).json({ error: 'Comment ID and User ID are required' });
         }
-    
+
         try {
             const { data: existingLike } = await supabase
                 .from('comment_likes')
@@ -55,22 +55,22 @@ export default async function handler(req, res) {
                 .eq('commentId', id)
                 .eq('userId', userId)
                 .single();
-    
+
             if (existingLike) {
                 // unlike
                 await supabase.from('comment_likes').delete().eq('id', existingLike.id);
-                await supabase.rpc('decrement_likes', { row_id: id }); 
+                await supabase.rpc('decrement_likes', { row_id: id });
                 await supabase.from('comments').update({ likedByUser: false }).eq('id', id).eq('userId', userId);
                 // manual:
                 // await supabase.from('comments').update({ likesCount: current - 1 }).eq('id', commentId);
-    
+
                 return res.status(200).json({ liked: false });
             } else {
                 // like
                 await supabase.from('comment_likes').insert([{ commentId: id, userId }]);
                 await supabase.from('comments').update({ likedByUser: true }).eq('id', id).eq('userId', userId);
                 await supabase.rpc('increment_likes', { row_id: id });
-    
+
                 return res.status(200).json({ liked: true });
             }
         } catch (err) {
@@ -85,11 +85,15 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Comment ID and User ID are required' });
         }
 
+        await supabase
+            .from('comment_likes')
+            .delete()
+            .eq('commentId', id)
+
         const { error } = await supabase
             .from('comments')
             .delete()
             .eq('id', id)
-            .eq('userId', userId);
 
         if (error) return res.status(500).json({ error: error.message });
         return res.status(200).json({ message: 'Comment deleted successfully' });
