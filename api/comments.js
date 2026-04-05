@@ -42,10 +42,26 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'PATCH') {
-        const { id, userId } = req.body;
+        const { id, userId, message } = req.body;
 
         if (!id || !userId) {
             return res.status(400).json({ error: 'Comment ID and User ID are required' });
+        }
+
+        if (message) {
+            const { data, error } = await supabase
+            .from('comments')
+            .update({
+                message
+            })
+            .eq('id', id)
+            .eq('userId', userId)
+            .select()
+            .single();
+    
+          if (error) throw error;
+    
+          return res.status(200).json(data);
         }
 
         try {
